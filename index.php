@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>F.L.A.M.E: The Digital Encounter</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #F3F3F3;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333333;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: #FFFFFF;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #result {
+      margin-top: 20px;
+      color: #333333;
+      font-weight: bold;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 0.15em solid #333333;
+      animation: typing 1s steps(20) infinite;
+    }
+
+ @keyframes typing {
+      from {
+        width: 1;
+      }
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes blink-caret {
+      from, to {
+        border-color: transparent;
+      }
+      50% {
+        border-color: #333333;
+      }
+    }
+    .error-message {
+      color: red;
+      margin-top: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>F.L.A.M.E: The Digital Encounter</h1>
+
+  <div class="container">
+    <div class="form-group">
+      <label for="yourName">Your Name:</label>
+      <input type="text" id="yourName" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label for="flameName">Flame's Name:</label>
+      <input type="text" id="flameName" class="form-control" onkeydown="handleEnterKey(event)" required>
+
+    </div>
+<div class="error-message" id="errorMessage"></div><br>
+    <button class="btn btn-primary btn-block" onclick="calculateFLAME()">Calculate</button>
+
+    <div id="result"></div>
+  <div id="meanings">
+      <h4>Meanings:</h4>
+      <ul>
+        <li><strong>F:</strong> Friendship</li>
+        <li><strong>L:</strong> Love</li>
+        <li><strong>A:</strong> Affection</li>
+        <li><strong>M:</strong> Marriage</li>
+        <li><strong>E:</strong> Enemies</li>
+      </ul>
+    </div>
+  </div>
+
+  </div>
+
+  <script>
+    function calculateFLAME() {
+      var yourName = document.getElementById("yourName").value;
+      var flameName = document.getElementById("flameName").value;
+      if (yourName.trim() === "" || flameName.trim() === "") {
+        showErrorMessage("Please fill in all the fields.");
+        return;
+      }
+
+      hideErrorMessage();
+
+      var commonLetters = findCommonLetters(yourName, flameName);
+      var leftoverLetters = findLeftoverLetters(yourName, flameName, commonLetters);
+      var outcome = determineOutcome(leftoverLetters);
+
+      displayResult(outcome);
+    }
+
+    function findCommonLetters(name1, name2) {
+      var commonLetters = [];
+      var name1Letters = name1.toLowerCase().split("");
+      var name2Letters = name2.toLowerCase().split("");
+
+      for (var i = 0; i < name1Letters.length; i++) {
+        if (name2Letters.includes(name1Letters[i]) && !commonLetters.includes(name1Letters[i])) {
+          commonLetters.push(name1Letters[i]);
+        }
+      }
+
+      return commonLetters;
+    }
+
+    function findLeftoverLetters(name1, name2, commonLetters) {
+      var name1Letters = name1.toLowerCase().split("");
+      var name2Letters = name2.toLowerCase().split("");
+
+      for (var i = 0; i < commonLetters.length; i++) {
+        name1Letters = name1Letters.filter(function(letter) {
+          return letter !== commonLetters[i];
+        });
+
+        name2Letters = name2Letters.filter(function(letter) {
+          return letter !== commonLetters[i];
+        });
+      }
+
+      return name1Letters.concat(name2Letters);
+    }
+
+    function determineOutcome(letters) {
+      var flameLetters = ["F", "L", "A", "M", "E"];
+      var count = 0;
+      var outcomeIndex = 0;
+
+      while (count < letters.length) {
+        count++;
+        outcomeIndex++;
+
+        if (outcomeIndex === flameLetters.length) {
+          outcomeIndex = 0;
+        }
+      }
+
+      return flameLetters[outcomeIndex];
+    }
+
+    function displayResult(outcome) {
+      var resultDiv = document.getElementById("result");
+      var outcomeText = "Your relationship outcome: " + outcome;
+
+      resultDiv.innerHTML = "";
+
+            var i = 0;
+      var interval = setInterval(function() {
+        if (i < outcomeText.length) {
+          var span = document.createElement("span");
+          span.textContent = outcomeText[i];
+          resultDiv.appendChild(span);
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 150); // Adjust the delay (in milliseconds) between each letter here
+    }
+  function handleEnterKey(event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        calculateFLAME();
+      }
+    }
+
+    function showErrorMessage(message) {
+      var errorMessageDiv = document.getElementById("errorMessage");
+      errorMessageDiv.textContent = message;
+    }
+
+    function hideErrorMessage() {
+      var errorMessageDiv = document.getElementById("errorMessage");
+      errorMessageDiv.textContent = "";
+    }
+  </script>
+</body>
+</html>
